@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses & Task Tracker</title>
+    <!-- External CSS dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Local stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+    <div class="max-w-4xl mx-auto p-4 md:p-6">
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row justify-between items-center pb-6 border-b border-slate-800 mb-6 gap-4">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-blue-400">
+                    <i class="fa-solid fa-chart-line mr-2"></i>Tracker Hub
+                </h1>
+                <p class="text-slate-400 text-sm mt-1">Expenses & Task Management Tool</p>
+            </div>
+            <div class="flex space-x-2 bg-slate-800 p-1 rounded-xl">
+                <button id="tab-expenses-btn" class="px-4 py-2 rounded-lg font-medium transition text-white bg-blue-600 shadow-md tab-btn">
+                    <i class="fa-solid fa-wallet mr-1"></i> Expenses
+                </button>
+                <button id="tab-tasks-btn" class="px-4 py-2 rounded-lg font-medium transition text-slate-400 hover:text-white tab-btn">
+                    <i class="fa-solid fa-list-check mr-1"></i> Tasks
+                </button>
+            </div>
+        </header>
+
+        <!-- EXPENSES SECTION -->
+        <section id="expenses-section" class="space-y-6">
+            <!-- Summary Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 stat-card">
+                    <span class="text-slate-400 text-sm">စုစုပေါင်း အသုံးစရိတ်</span>
+                    <h2 id="total-expense" class="text-2xl font-bold text-emerald-400 mt-1">0 MMK</h2>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 stat-card">
+                    <span class="text-slate-400 text-sm">ဒီလ အသုံးစရိတ်</span>
+                    <h2 id="monthly-expense" class="text-2xl font-bold text-blue-400 mt-1">0 MMK</h2>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 stat-card">
+                    <span class="text-slate-400 text-sm">စာရင်း အရေအတွက်</span>
+                    <h2 id="expense-count" class="text-2xl font-bold text-purple-400 mt-1">0 ခု</h2>
+                </div>
+            </div>
+
+            <!-- Expense Form & Table Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Add/Edit Expense Form -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 h-fit">
+                    <h3 class="text-lg font-semibold mb-4 text-slate-200">
+                        <i class="fa-solid fa-plus-circle text-blue-400 mr-2"></i>အသုံးစရိတ် ထည့်/ပြင်ရန်
+                    </h3>
+                    <form id="expense-form" class="space-y-4">
+                        <input type="hidden" id="exp-id" value="">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">အကြောင်းအရာ</label>
+                            <input type="text" id="exp-title" required placeholder="ဥပမာ- စာအုပ်ဝယ်စရိတ်" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">ပမာဏ (MMK)</label>
+                            <input type="number" id="exp-amount" required placeholder="10000" min="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">အမျိုးအစား</label>
+                            <select id="exp-category" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                                <option value="Food">အစားအသောက်</option>
+                                <option value="Shopping">စျေးဝယ်</option>
+                                <option value="Bills">ဘေလ် / မီတာ</option>
+                                <option value="Transport">ခရီးစရိတ်</option>
+                                <option value="General">အထွေထွေ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">ရက်စွဲ</label>
+                            <input type="date" id="exp-date" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="submit" id="exp-submit-btn" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg transition">
+                                ထည့်သွင်းမည်
+                            </button>
+                            <button type="button" id="exp-cancel-btn" class="hidden px-3 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition">
+                                ပယ်ဖျက်
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Expense List Table -->
+                <div class="lg:col-span-2 bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <h3 class="text-lg font-semibold mb-4 text-slate-200">
+                        <i class="fa-solid fa-list-ul text-blue-400 mr-2"></i>အသုံးစရိတ် စာရင်း
+                    </h3>
+                    <div class="overflow-x-auto mb-4">
+                        <table class="min-w-full bg-slate-900 rounded-lg">
+                            <thead>
+                                <tr class="text-slate-400 border-b border-slate-700">
+                                    <th class="py-2 px-3 text-left text-sm font-medium">ရက်စွဲ</th>
+                                    <th class="py-2 px-3 text-left text-sm font-medium">အကြောင်းအရာ</th>
+                                    <th class="py-2 px-3 text-left text-sm font-medium">အမျိုးအစား</th>
+                                    <th class="py-2 px-3 text-left text-sm font-medium">ပမာဏ (MMK)</th>
+                                    <th class="py-2 px-3 text-center text-sm font-medium">လုပ်ဆောင်ချက်</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expense-table-body">
+                                <!-- Expense rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="expense-pagination" class="flex justify-center items-center space-x-2 text-slate-300">
+                        <button class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-page="prev"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span class="page-info">Page 1</span>
+                        <button class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-page="next"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TASKS SECTION -->
+        <section id="tasks-section" class="space-y-6 hidden">
+            <!-- Summary Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 stat-card">
+                    <span class="text-slate-400 text-sm">စုစုပေါင်း Tasks</span>
+                    <h2 id="total-tasks" class="text-2xl font-bold text-emerald-400 mt-1">0 ခု</h2>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 stat-card">
+                    <span class="text-slate-400 text-sm">ပြီးစီး Tasks</span>
+                    <h2 id="completed-tasks" class="text-2xl font-bold text-blue-400 mt-1">0 ခု</h2>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 stat-card">
+                    <span class="text-slate-400 text-sm">ကျန်ရှိ Tasks</span>
+                    <h2 id="pending-tasks" class="text-2xl font-bold text-purple-400 mt-1">0 ခု</h2>
+                </div>
+            </div>
+
+            <!-- Task Form & List Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Add/Edit Task Form -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 h-fit">
+                    <h3 class="text-lg font-semibold mb-4 text-slate-200">
+                        <i class="fa-solid fa-plus-circle text-blue-400 mr-2"></i>Task အသစ်ထည့်ရန်
+                    </h3>
+                    <form id="task-form" class="space-y-4">
+                        <input type="hidden" id="task-id" value="">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Task အမည်</label>
+                            <input type="text" id="task-title" required placeholder="ဥပမာ- အစီရင်ခံစာတင်ရန်" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">နောက်ဆုံးထားရမည့်ရက်</label>
+                            <input type="date" id="task-due-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">ဦးစားပေး</label>
+                            <select id="task-priority" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                                <option value="High">အမြင့်ဆုံး</option>
+                                <option value="Medium">အသင့်အတင့်</option>
+                                <option value="Low">အနိမ့်ဆုံး</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="submit" id="task-submit-btn" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg transition">
+                                ထည့်သွင်းမည်
+                            </button>
+                            <button type="button" id="task-cancel-btn" class="hidden px-3 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition">
+                                ပယ်ဖျက်
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Task List -->
+                <div class="lg:col-span-2 bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <h3 class="text-lg font-semibold mb-4 text-slate-200">
+                        <i class="fa-solid fa-clipboard-list text-blue-400 mr-2"></i>Task စာရင်း
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-slate-900 rounded-lg">
+                            <thead>
+                                <tr class="text-slate-400 border-b border-slate-700">
+                                    <th class="py-2 px-3 text-left text-sm font-medium">Task အမည်</th>
+                                    <th class="py-2 px-3 text-left text-sm font-medium">နောက်ဆုံးထားရမည့်ရက်</th>
+                                    <th class="py-2 px-3 text-left text-sm font-medium">ဦးစားပေး</th>
+                                    <th class="py-2 px-3 text-left text-sm font-medium">အခြေအနေ</th>
+                                    <th class="py-2 px-3 text-center text-sm font-medium">လုပ်ဆောင်ချက်</th>
+                                </tr>
+                            </thead>
+                            <tbody id="task-table-body">
+                                <!-- Task rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-slate-500 text-sm mt-10 pt-6 border-t border-slate-800">
+            <p>&copy; 2026 Tracker Hub. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <!-- Local JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
