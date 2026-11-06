@@ -90,31 +90,34 @@
                     </form>
                 </div>
 
-                <!-- Expense List Table -->
+                <!-- Expense Table -->
                 <div class="lg:col-span-2 bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <h3 class="text-lg font-semibold mb-4 text-slate-200">
-                        <i class="fa-solid fa-list-ul text-blue-400 mr-2"></i>အသုံးစရိတ် စာရင်း
-                    </h3>
-                    <div class="overflow-x-auto mb-4">
-                        <table class="min-w-full bg-slate-900 rounded-lg">
-                            <thead>
-                                <tr class="text-slate-400 border-b border-slate-700">
-                                    <th class="py-2 px-3 text-left text-sm font-medium">ရက်စွဲ</th>
-                                    <th class="py-2 px-3 text-left text-sm font-medium">အကြောင်းအရာ</th>
-                                    <th class="py-2 px-3 text-left text-sm font-medium">အမျိုးအစား</th>
-                                    <th class="py-2 px-3 text-left text-sm font-medium">ပမာဏ (MMK)</th>
-                                    <th class="py-2 px-3 text-center text-sm font-medium">လုပ်ဆောင်ချက်</th>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-slate-200">အသုံးစရိတ် မှတ်တမ်းများ</h3>
+                        <select id="expense-category-filter" class="bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-blue-500">
+                            <option value="All">အမျိုးအစား အားလုံး</option>
+                            <option value="Food">အစားအသောက်</option>
+                            <option value="Shopping">စျေးဝယ်</option>
+                            <option value="Bills">ဘေလ် / မီတာ</option>
+                            <option value="Transport">ခရီးစရိတ်</option>
+                            <option value="General">အထွေထွေ</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-900/50 text-slate-400 uppercase text-xs">
+                                <tr>
+                                    <th class="p-3">အကြောင်းအရာ</th>
+                                    <th class="p-3">ပမာဏ</th>
+                                    <th class="p-3">အမျိုးအစား</th>
+                                    <th class="p-3">ရက်စွဲ</th>
+                                    <th class="p-3 text-right">လုပ်ဆောင်ချက်</th>
                                 </tr>
                             </thead>
                             <tbody id="expense-table-body">
-                                <!-- Expense rows will be inserted here -->
+                                <!-- Dynamic rows -->
                             </tbody>
                         </table>
-                    </div>
-                    <div id="expense-pagination" class="flex justify-center items-center space-x-2 text-slate-300">
-                        <button class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-page="prev"><i class="fa-solid fa-chevron-left"></i></button>
-                        <span class="page-info">Page 1</span>
-                        <button class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-page="next"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -126,15 +129,15 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 stat-card">
                     <span class="text-slate-400 text-sm">စုစုပေါင်း Tasks</span>
-                    <h2 id="total-tasks" class="text-2xl font-bold text-emerald-400 mt-1">0 ခု</h2>
+                    <h2 id="total-tasks" class="text-2xl font-bold text-blue-400 mt-1">0 ခု</h2>
                 </div>
                 <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 stat-card">
-                    <span class="text-slate-400 text-sm">ပြီးစီး Tasks</span>
-                    <h2 id="completed-tasks" class="text-2xl font-bold text-blue-400 mt-1">0 ခု</h2>
+                    <span class="text-slate-400 text-sm">ပြီးစီးခဲ့သော Tasks</span>
+                    <h2 id="completed-tasks" class="text-2xl font-bold text-emerald-400 mt-1">0 ခု</h2>
                 </div>
                 <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 stat-card">
-                    <span class="text-slate-400 text-sm">ကျန်ရှိ Tasks</span>
-                    <h2 id="pending-tasks" class="text-2xl font-bold text-purple-400 mt-1">0 ခု</h2>
+                    <span class="text-slate-400 text-sm">လုပ်ဆောင်ရန် ကျန်ရှိသော Tasks</span>
+                    <h2 id="pending-tasks" class="text-2xl font-bold text-amber-400 mt-1">0 ခု</h2>
                 </div>
             </div>
 
@@ -143,25 +146,25 @@
                 <!-- Add/Edit Task Form -->
                 <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 h-fit">
                     <h3 class="text-lg font-semibold mb-4 text-slate-200">
-                        <i class="fa-solid fa-plus-circle text-blue-400 mr-2"></i>Task အသစ်ထည့်ရန်
+                        <i class="fa-solid fa-plus-circle text-blue-400 mr-2"></i>Task ထည့်/ပြင်ရန်
                     </h3>
                     <form id="task-form" class="space-y-4">
                         <input type="hidden" id="task-id" value="">
                         <div>
-                            <label class="block text-sm text-slate-400 mb-1">Task အမည်</label>
-                            <input type="text" id="task-title" required placeholder="ဥပမာ- အစီရင်ခံစာတင်ရန်" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                            <label class="block text-sm text-slate-400 mb-1">Task ခေါင်းစဉ်</label>
+                            <input type="text" id="task-title" required placeholder="ဥပမာ- Report ရေးရန်" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm text-slate-400 mb-1">နောက်ဆုံးထားရမည့်ရက်</label>
-                            <input type="date" id="task-due-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-slate-400 mb-1">ဦးစားပေး</label>
+                            <label class="block text-sm text-slate-400 mb-1">ဦးစားပေးအဆင့် (Priority)</label>
                             <select id="task-priority" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
-                                <option value="High">အမြင့်ဆုံး</option>
-                                <option value="Medium">အသင့်အတင့်</option>
-                                <option value="Low">အနိမ့်ဆုံး</option>
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
                             </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">နောက်ဆုံးရက် (Due Date)</label>
+                            <input type="date" id="task-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
                         </div>
                         <div class="flex gap-2">
                             <button type="submit" id="task-submit-btn" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg transition">
@@ -176,36 +179,26 @@
 
                 <!-- Task List -->
                 <div class="lg:col-span-2 bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <h3 class="text-lg font-semibold mb-4 text-slate-200">
-                        <i class="fa-solid fa-clipboard-list text-blue-400 mr-2"></i>Task စာရင်း
-                    </h3>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-slate-900 rounded-lg">
-                            <thead>
-                                <tr class="text-slate-400 border-b border-slate-700">
-                                    <th class="py-2 px-3 text-left text-sm font-medium">Task အမည်</th>
-                                    <th class="py-2 px-3 text-left text-sm font-medium">နောက်ဆုံးထားရမည့်ရက်</th>
-                                    <th class="py-2 px-3 text-left text-sm font-medium">ဦးစားပေး</th>
-                                    <th class="py-2 px-3 text-left text-sm font-medium">အခြေအနေ</th>
-                                    <th class="py-2 px-3 text-center text-sm font-medium">လုပ်ဆောင်ချက်</th>
-                                </tr>
-                            </thead>
-                            <tbody id="task-table-body">
-                                <!-- Task rows will be inserted here -->
-                            </tbody>
-                        </table>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-slate-200">Tasks စာရင်း</h3>
+                        <select id="task-filter" class="bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-blue-500">
+                            <option value="all">အားလုံး</option>
+                            <option value="pending">မပြီးသေးသည်များ</option>
+                            <option value="completed">ပြီးစီးသည်များ</option>
+                        </select>
+                    </div>
+                    <div id="task-list-body" class="space-y-3">
+                        <!-- Dynamic task list -->
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- Footer -->
-        <footer class="text-center text-slate-500 text-sm mt-10 pt-6 border-t border-slate-800">
-            <p>&copy; 2026 Tracker Hub. All rights reserved.</p>
-        </footer>
     </div>
-    
-    <!-- Local JavaScript -->
+
+    <!-- JavaScript Module Files -->
+    <script src="js/store.js"></script>
+    <script src="js/expenses.js"></script>
+    <script src="js/tasks.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
